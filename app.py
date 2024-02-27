@@ -57,8 +57,6 @@ def products_items():
                 element += f"{element1} : {element2} \n"
             text = driver.find_element(
                 By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[2]/portlet/div/div[2]/div/div/div[1]/datatable-v2/div/div[2]/div[2]/div[1]/div[1]').text
-            if text != True:
-                break
             numbers = re.findall(r'\d+', text)
             if int(numbers[1]) == int(numbers[2]):
                 break
