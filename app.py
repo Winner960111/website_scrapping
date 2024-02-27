@@ -54,7 +54,7 @@ def products_items():
                     0].find_element(By.TAG_NAME, 'label').text
                 element2 = find_elements(products_category[i], By.TAG_NAME, 'td')[
                     1].find_element(By.TAG_NAME, 'label').text
-                element += f"{element1}:{element2},"
+                element += f"{element1} : {element2} \n"
             text = driver.find_element(
                 By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[2]/portlet/div/div[2]/div/div/div[1]/datatable-v2/div/div[2]/div[2]/div[1]/div[1]').text
             if text != True:
