@@ -46,33 +46,34 @@ def products_items():
         products_category = find_element(
             driver, By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[2]/portlet/div/div[2]/div/div/div[1]/datatable-v2/div/div[2]/div[1]/div/div/div[2]/table/tbody').find_elements(By.XPATH, 'tr')
         item_amount = len(products_category)
-        if item_amount:
-            for i in range(item_amount):
-                products_category = find_element(
-                    driver, By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[2]/portlet/div/div[2]/div/div/div[1]/datatable-v2/div/div[2]/div[1]/div/div/div[2]/table/tbody').find_elements(By.XPATH, 'tr')
-                element1 = find_elements(products_category[i], By.TAG_NAME, 'td')[
-                    0].find_element(By.TAG_NAME, 'label').text
-                element2 = find_elements(products_category[i], By.TAG_NAME, 'td')[
-                    1].find_element(By.TAG_NAME, 'label').text
-                element += f"{element1} : {element2} \n"
-            text = driver.find_element(
-                By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[2]/portlet/div/div[2]/div/div/div[1]/datatable-v2/div/div[2]/div[2]/div[1]/div[1]').text
-            numbers = re.findall(r'\d+', text)
-            if int(numbers[1]) == int(numbers[2]):
-                break
-            driver.find_element(
-                By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[2]/portlet/div/div[2]/div/div/div[1]/datatable-v2/div/div[2]/div[2]/div[2]/div/ul/li[5]').click()
+        for i in range(item_amount):
+            products_category = find_element(
+                driver, By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[2]/portlet/div/div[2]/div/div/div[1]/datatable-v2/div/div[2]/div[1]/div/div/div[2]/table/tbody').find_elements(By.XPATH, 'tr')
+            element1 = find_elements(products_category[i], By.TAG_NAME, 'td')[
+                0].find_element(By.TAG_NAME, 'label').text
+            element2 = find_elements(products_category[i], By.TAG_NAME, 'td')[
+                1].find_element(By.TAG_NAME, 'label').text
+            element += f"{element1} : {element2} \n"
+        text_element = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[2]/portlet/div/div[2]/div/div/div[1]/datatable-v2/div/div[2]/div[2]/div[1]/div[1]')
+        text = text_element.text
+
+        numbers = re.findall(r'\d+', text)
+        print(f"{int(numbers[1])} and {int(numbers[2])}")
+        if numbers[1] != numbers[2]:
+            next_click = driver.find_element(
+                By.CLASS_NAME, 'next')
+            driver.execute_script("arguments[0].click();", next_click)
             sleep(1)
         else:
             break
     return element
 
-
 def get_info():
     try:
         driver.find_element(By.CLASS_NAME, 'm-card-profile__name')
         name = driver.find_element(By.CLASS_NAME, 'm-card-profile__name').text
-    except:
+    except Exception as e:
+        print(e)
         name = ""
 
     try:
@@ -80,27 +81,31 @@ def get_info():
             By.CLASS_NAME, 'm-card-profile__email')
         address = driver.find_element(
             By.CLASS_NAME, 'm-card-profile__email').text
-    except:
+    except Exception as e:
+        print(e)
         address = ""
     try:
         driver.find_element(
             By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div/exhibitor-details/div[1]/div[2]/div[3]/div[2]/a')
         website = driver.find_element(
             By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div/exhibitor-details/div[1]/div[2]/div[3]/div[2]/a').text
-    except:
+    except Exception as e:
+        print(e)
         website = ""
     try:
         driver.find_element(
             By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div/exhibitor-details/div[1]/div[3]/div[2]/div[2]')
         description = driver.find_element(
             By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[1]/div/div[2]/div/exhibitor-details/div[1]/div[3]/div[2]/div[2]').text
-    except:
+    except Exception as e:
+        print(e)
         description = ""
     try:
         driver.find_element(
             By.XPATH, '/html/body/div[1]/div[1]/div/div/div/div[1]/div[2]/portlet/div/div[2]/div/div/div[1]/datatable-v2/div/div[2]/div[1]/div/div/div[1]/div/table/thead/tr/th[1]')
         products = products_items()
-    except:
+    except Exception as e:
+        print("Error :", e)
         products = ""
     value = [name, address, website, description, products]
     sheet.append(value)
@@ -136,7 +141,6 @@ while True:
             By.XPATH, '/html/body/div[1]/div[1]/div/div/div/portlet[2]/div/div[2]/div/div[2]/div/datatable-visitors/div/div[2]/div[2]/div[1]/div[1]').text
         numbers = re.findall(r'\d+', text)
         if int(numbers[1]) == int(numbers[2]):
-
             break
         next = driver.find_element(
             By.XPATH, "/ html/body/div[1]/div[1]/div/div/div/portlet[2]/div/div[2]/div/div[2]/div/datatable-visitors/div/div[2]/div[2]/div[2]/div/ul/li[9]")
